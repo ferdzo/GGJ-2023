@@ -18,13 +18,12 @@ public class TileManager : MonoBehaviour
     void Start()
     {
         DrawGrid();
-        select.SetActive(true);
-        selectInst = Instantiate(select, Vector3.zero, Quaternion.identity);
-    }
+        /*select.SetActive(true);*/
+/*        selectInst = Instantiate(select, Vector3.zero, Quaternion.identity);
+*/    }
 
     void Update()
     {
-
         GameObject n = GetObjectOnClick();
 
         AddTile(n);
@@ -82,16 +81,19 @@ public class TileManager : MonoBehaviour
         TileList.Add(t);
     }
     void ChangeTile(GameObject n)
-    {
-
+    { 
         Vector3 pos = n.transform.position;
-
         Destroy(n);
         GameObject nov = Instantiate(tile1, pos, Quaternion.identity);
         nov.name = n.name;
 
     }
+    public void PlayerAddTile(GameObject n, int x , int z) {
+        Destroy(GameObject.Find(x.ToString() + "x" + z.ToString()));
+        GameObject tile = Instantiate(n,new Vector3(x , 0 , z), Quaternion.identity);
+        tile.name = n.name; 
 
+    }
     GameObject GetObjectOnClick()
     {
         RaycastHit mtInfo = new RaycastHit();
@@ -110,13 +112,13 @@ public class TileManager : MonoBehaviour
          RaycastHit mtInfo = new RaycastHit();
          if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out mtInfo))
          {
-            selectInst.SetActive(true);
-            selectInst.transform.position = mtInfo.transform.parent.gameObject.transform.position;
+            select.SetActive(true);
+            select.transform.position = mtInfo.transform.parent.gameObject.transform.position;
             
          }
          else
         {
-            selectInst.SetActive(false);
+            select.SetActive(false);
         }
 
     }
@@ -154,31 +156,51 @@ public class TileManager : MonoBehaviour
         }
 
     GameObject h;
+    void BuildFactory(Vector3 BuildingCoord)
+    {
+        Vector3 FactoryCoord = RandomCoords();
+        GameObject factory;
+        if (FactoryCoord == BuildingCoord)
+        {
+            FactoryCoord = RandomCoords();
+        }
+        factory = Instantiate(Buildings[2], FactoryCoord, Quaternion.identity);
+        Destroy(GameObject.Find(FactoryCoord.x.ToString() + "x" + FactoryCoord.z.ToString()));
+        factory.name = FactoryCoord.x.ToString() + "x" + FactoryCoord.z.ToString();
+    }
     void DrawCity() {
         
         Vector3 BuildingCoord = RandomCoords();
         GameObject t = Instantiate(Buildings[1], BuildingCoord, Quaternion.identity);
         List<GameObject> houses = new List<GameObject>();
-       
+        Destroy(GameObject.Find(BuildingCoord.x.ToString() + "x" + BuildingCoord.z.ToString()));
         t.name = BuildingCoord.x.ToString() + "x" + BuildingCoord.z.ToString();
+
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
-                if (BuildingCoord.x == i || BuildingCoord.x == i+1 || BuildingCoord.x == i-1)
+                if (BuildingCoord.x == i || BuildingCoord.x == i + 1 || BuildingCoord.x == i - 1)
                 {
-                    if (BuildingCoord.z == j || BuildingCoord.z == j + 1 || BuildingCoord.z == j - 1)
-                        h = Instantiate(Buildings[1], new Vector3(i, 0,j), Quaternion.identity);
+                    if (BuildingCoord.z == j || BuildingCoord.z == j + 1 || BuildingCoord.z == j - 1) { 
+                        if(i== BuildingCoord.x && j== BuildingCoord.z)
+                        {
+                            continue;
+                        }
+                        h = Instantiate(Buildings[0], new Vector3(i, 0, j), Quaternion.identity);
+                        Destroy(GameObject.Find(i.ToString() + "x"+ j.ToString()));
                         h.name = i.ToString() + "x" + j.ToString();
-                        Debug.Log(h.name);
-                        
                         houses.Add(h);
+                    }
                 }
-               
+                
             }
         }
-       
+        BuildFactory(BuildingCoord);
+
     }
 
-     
+   
+
+
 }
 
 public class Tile_c
