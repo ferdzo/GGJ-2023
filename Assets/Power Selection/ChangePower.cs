@@ -12,6 +12,19 @@ public class ChangePower : MonoBehaviour
     public Sprite unselectedItem;
     public bool isSelected = false;
 
+    public GameObject _prefabToInstantiate;
+
+    public NatureType natureType; 
+
+    public enum NatureType
+    {
+        Tsunami,
+        Tree,
+        Tornado,
+        Thunder
+    }
+
+
     public void ToggleItem()
     {
         GameObject Container = GameObject.Find("Background");
@@ -23,14 +36,16 @@ public class ChangePower : MonoBehaviour
             Controller.UnselectOthers();
             currentImage.sprite = selectedItem;
             isSelected = true;
-                //TODO: CHANGE PREFAB TO THE APPROPRIATE ONE 
-                // ex. this.name + _prefab;
+            //TODO: CHANGE PREFAB TO THE APPROPRIATE ONE 
+            // ex. this.name + _prefab;
 
-                Controller.itemPrefab = GameObject.Find(this.name);
-            Debug.Log(Controller.itemPrefab.name);
+            Controller.itemPrefab = _prefabToInstantiate;
+            Controller.SelectedItem = this;
         }
         else if (isSelected)
         {
+            Controller.itemPrefab = null;
+            Controller.SelectedItem = null;
             currentImage.sprite = unselectedItem;
             isSelected = false;
         }

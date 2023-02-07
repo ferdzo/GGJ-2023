@@ -9,8 +9,8 @@ using System;
 public class ProgressBar : MonoBehaviour
 {
     public Slider slider;
-    public TextMeshProUGUI  naturePointsText;
-    public TextMeshProUGUI  humanPointsText;
+    public TextMeshProUGUI naturePointsText;
+    public TextMeshProUGUI humanPointsText;
 
     public float naturePoints;
     public float humanPoints;
@@ -27,8 +27,29 @@ public class ProgressBar : MonoBehaviour
 
     }
 
-    void Update ()
+    void Update()
     {
-            SetProgressValue();
+        CalculatePoints();
+        SetProgressValue();
+    }
+
+    void CalculatePoints()
+    {
+        naturePoints = 0;
+        humanPoints = 0;
+
+        DataValue[] values = GameObject.FindObjectsOfType<DataValue>();
+
+        foreach (DataValue value in values)
+        {
+            if (value.tiletype == DataValue.Tile_type.Player)
+            {
+                humanPoints += value.points;
+            }
+            else if (value.tiletype == DataValue.Tile_type.Nature)
+            {
+                naturePoints += value.points;
+            }
+        }
     }
 }

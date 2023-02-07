@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class DataValue : MonoBehaviour
 {
-    [SerializeField]protected int points;
-    [SerializeField] protected Tile_type tiletype;
+    [SerializeField] public int points;
+    [SerializeField] public Tile_type tiletype;
         public enum Tile_type{
         Player,
         Nature,
